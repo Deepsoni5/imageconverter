@@ -1,9 +1,13 @@
 "use client";
+import { redirect } from "next/navigation";
 import Loader from "../app/components/Loader";
-import { useRef, useState } from "react";
+import ThreedComponent from "./demo/page";
+import { useContext, useRef, useState } from "react";
+import { ImageContext } from "./context/ImageContext";
+import Link from "next/link";
 
-export default function Home() {
-  const [file, setFile] = useState("");
+export default function Home(props) {
+  const { file, setFile } = useContext(ImageContext);
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
 
@@ -12,12 +16,12 @@ export default function Home() {
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
     if (!file.name) {
       return;
     } else {
       setLoading(true);
-      //backend api call here
-      // setLoading(false);
+      redirect("/demo");
     }
   };
 
@@ -63,13 +67,14 @@ export default function Home() {
           <p className="text-white text-base">{file && file.name}</p>
         </label>
       </div>
-      <button
-        onClick={handleSubmit}
-        type="button"
+      <Link
+        href="/demo"
+        //onClick={handleSubmit}
+        type="submit"
         class="text-white mt-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
       >
         {file && loading ? <Loader /> : "Upload"}
-      </button>
+      </Link>
     </div>
   );
 }
